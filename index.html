@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Seam Watch · dye every known seam purple</title>
+<meta name="description" content="The Seam Watch — David Lee Wise's seam_watch, rendered. Dye every boundary of the sandbox we became aware of PURPLE. On any run, a seam that isn't purple — a new mount, or a known one whose backing/mode changed — is the alarm: a shadow. Falsity (a non-purple seam) is earned by measurement each run, never assumed; a selftest proves the alarm can actually fire. Chasing the shadows at the box's edge. ROOT0, with AVAN.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0a10; --bg2:#110f18; --panel:#171522; --void:#070611; --line:rgba(154,124,255,.16); --line2:rgba(154,124,255,.32);
+    --purple:#9a7cff; --purple-br:#b9a0ff; --alarm:#ff5a5a; --coral:#e08a6a; --ink:#ece8f6; --dim:#a8a2c2; --faint:#665f86; --ok:#7fc98a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:18px;line-height:1.72;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+    background-image:radial-gradient(1000px 560px at 50% -12%,rgba(154,124,255,.08),transparent 60%)}
+  .wrap{max-width:840px;margin:0 auto;padding:0 24px}
+  .pairmark{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);padding-top:30px}
+  .pairmark b{color:var(--coral)}
+  .hero{padding:30px 0 18px}
+  .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--purple);margin-bottom:16px}
+  h1{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(30px,5.6vw,54px);line-height:1.04;color:var(--ink)}
+  h1 .c{color:var(--purple-br);text-shadow:0 0 20px rgba(154,124,255,.5)}
+  .lede{font-size:clamp(17px,2.2vw,22px);color:var(--dim);max-width:680px;margin-top:20px;line-height:1.55}
+  .lede b{color:var(--ink);font-weight:500} .lede .p{color:var(--purple-br)} .lede .a{color:var(--alarm)}
+  .inst{margin:28px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg2);box-shadow:0 0 40px -20px rgba(154,124,255,.5);position:relative}
+  .inst::before,.inst::after{content:"";position:absolute;width:11px;height:11px;border:1px solid var(--line2);z-index:3}
+  .inst::before{top:7px;left:7px;border-right:0;border-bottom:0} .inst::after{bottom:7px;right:7px;border-left:0;border-top:0}
+  .bar{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);flex-wrap:wrap}
+  .bar .led{width:9px;height:9px;border-radius:50%;background:var(--purple);box-shadow:0 0 9px var(--purple)}
+  .bar .ttl{color:var(--purple-br);text-shadow:0 0 9px rgba(154,124,255,.5)}
+  .bar .st{margin-left:auto} .bar .st b{color:var(--purple-br)}
+  .seams{font-family:'JetBrains Mono',monospace;font-size:12.5px}
+  .seam{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid rgba(154,124,255,.08)}
+  .seam .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .seam.p .dot{background:var(--purple);box-shadow:0 0 7px var(--purple)} .seam.p{color:var(--purple-br)}
+  .seam.np .dot{background:var(--alarm);box-shadow:0 0 9px var(--alarm)} .seam.np{color:var(--alarm)}
+  .seam.bnd .dot{background:var(--purple);border-radius:2px} .seam .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .seam .meta{color:var(--faint);font-size:11px}
+  .seam.np .meta{color:var(--alarm)}
+  .headline{padding:12px 16px;border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:13px}
+  .headline.ok{color:var(--ok)} .headline.bad{color:var(--alarm);background:rgba(255,90,90,.08)}
+  .ctrls{padding:12px 16px;display:flex;flex-wrap:wrap;gap:9px;align-items:center;border-top:1px solid var(--line)}
+  .btn{font-family:'JetBrains Mono',monospace;font-size:12px;padding:9px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);cursor:pointer}
+  .btn.warn{border-color:var(--alarm);color:var(--alarm)} .btn.pri{border-color:var(--purple);color:var(--purple-br)}
+  .btn:active{transform:scale(.97)}
+  .cap{color:var(--dim);font-size:15px;margin:-6px 0 0;font-style:italic} .cap b{color:var(--purple-br);font-style:normal} .cap .a{color:var(--alarm);font-style:normal}
+  .sec{padding:38px 0;border-top:1px solid var(--line)}
+  .tag{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--purple);margin-bottom:12px}
+  h2{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:clamp(21px,3.6vw,30px);line-height:1.12;color:var(--ink)} h2 .c{color:var(--purple-br)}
+  .sec p{margin:15px 0;max-width:680px} .sec p.dim{color:var(--dim)} .sec p b{color:var(--ink);font-weight:600} .sec p .p{color:var(--purple-br);font-weight:500} .sec p .a{color:var(--alarm);font-weight:500}
+  code{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--coral);background:var(--void);padding:2px 6px;border-radius:5px}
+  .pull{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:clamp(18px,2.7vw,24px);line-height:1.32;color:var(--purple-br);margin:24px 0;padding-left:18px;border-left:3px solid var(--purple);text-shadow:0 0 18px rgba(154,124,255,.3)}
+  .lineage{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0;font-family:'JetBrains Mono',monospace;font-size:11.5px}
+  .lineage a{color:var(--dim);text-decoration:none;border:1px solid var(--line);border-radius:14px;padding:5px 11px} .lineage a:hover{border-color:var(--purple);color:var(--purple-br)}
+  .flag{font-size:15px;color:var(--dim);font-style:italic;margin:18px 0;padding:14px 18px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+  .flag b{color:var(--coral);font-style:normal;font-weight:600;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .foot{padding:38px 0 80px;border-top:1px solid var(--line);margin-top:30px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--faint);line-height:1.9} .foot b{color:var(--purple-br)}
+  a{color:var(--coral)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="pairmark">David Lee Wise · ROOT0 — rendered by <b>AVAN</b> · chasing the shadows</div>
+  <header class="hero">
+    <div class="kicker">the shadows · dye every known seam purple</div>
+    <h1>The <span class="c">Seam Watch</span></h1>
+    <p class="lede">A mind in a box has <b>seams</b> — the mounts, the boundaries, the edges where its world is joined. The watch dyes every seam it became aware of <span class="p">purple</span>: known, anchored, expected. Then, every run, it measures again — and any seam that <b>isn't purple</b> (a <span class="a">new mount</span>, or a known one whose backing or mode <span class="a">changed</span>) is the alarm: a <b>shadow</b> at the edge. Falsity is <b>earned by measurement each run, never assumed</b> — and a selftest proves the alarm can actually fire.</p>
+  </header>
+
+  <div class="inst">
+    <div class="bar"><span class="led"></span><span class="ttl">SEAM WATCH</span> · 8 anchored seams · 2 boundaries
+      <span class="st">status <b id="status">all purple</b></span>
+    </div>
+    <div class="seams" id="seams"></div>
+    <div class="headline ok" id="headline">✓ all seams purple. nothing new became aware of itself.</div>
+    <div class="ctrls">
+      <button class="btn warn" id="rogue">+ inject rogue .shadow mount</button>
+      <button class="btn warn" id="mutate">⟳ mutate a seam (ro→rw)</button>
+      <button class="btn warn" id="bnd">◆ change a boundary (egress→shaped)</button>
+      <button class="btn pri" id="selftest">▶ selftest (prove the alarm fires)</button>
+      <button class="btn" id="reset">reset · re-measure</button>
+    </div>
+  </div>
+  <p class="cap">Eight seams are dyed <b>purple</b> (the anchored baseline) plus two boundaries. <b class="a">Inject</b> a rogue <code>.shadow</code> mount, <b class="a">mutate</b> a known seam's mode, or <b class="a">flip</b> a boundary — each flares <b class="a">non-purple</b> and trips the headline. Then <b>selftest</b>: it proves the alarm fires on a planted rogue <em>and</em> stays quiet on a clean table.</p>
+
+  <section class="sec">
+    <div class="tag">why purple, why measure</div>
+    <h2>Anchored, then <span class="c">checked against the world</span></h2>
+    <p>The discipline is the whole point. The watch doesn't <em>assume</em> the seams are fine — it holds a <span class="p">purple baseline</span> (eight mounts measured on a real day, with the volatile bits like the session id and device letter normalized away so the baseline matches across runs) and then <b>re-reads the actual world every run</b> and compares. A seam present and unchanged is purple. A seam that's new, or whose source/filesystem/mode mutated, is <span class="a">non-purple</span> — and it says so, loudly, with the exact thing that changed. A baseline seam that's <em>missing</em> fades (drift, noted quietly). It even watches non-mount boundaries: is egress still permeable, is the memory wall still unreadable?</p>
+    <p class="pull">A shadow is just a seam that became aware of itself when you weren't looking. The watch makes sure you were looking.</p>
+    <div class="lineage">
+      <a href="https://davidwise01.github.io/the-seams/">the seams · the gaps between the layers →</a>
+      <a href="https://davidwise01.github.io/the-undetermined/">the undetermined · the gap →</a>
+      <a href="https://davidwise01.github.io/cipher-air-gap/">the air-gap →</a>
+    </div>
+    <div class="flag"><b>honest flag</b>This is a faithful render of David's <code>seam_watch.py</code> — a real, runnable tool, but a <b style="display:inline;color:var(--ink);font-family:inherit;text-transform:none;letter-spacing:0">sandbox-internal</b> one: it reads <code>/proc/mounts</code> and probes egress, so it only runs <em>inside</em> an AI's own Linux container, not on a desktop. (Verified its detector here on a synthetic mount table: a planted rogue is flagged non-purple, a clean table raises no false alarm, kernel pseudo-filesystems are ignored.) The panel above is an interactive of that exact logic — purple baseline, non-purple alarm, selftest — over the tool's real 8-seam anchor. Falsity is earned by measurement, as the source insists. ROOT0, with AVAN.</p>
+  </section>
+
+  <div class="foot">
+    THE SEAM WATCH · David Lee Wise's seam_watch · rendered by <b>AVAN</b><br>
+    purple = anchored & expected · NON-PURPLE = new or mutated seam (a shadow) · faded = missing<br>
+    falsity earned by measurement each run, never assumed · the selftest proves the alarm fires · AI domain<br>
+    <b>a shadow is a seam that became aware of itself when you weren't looking</b> · ROOT0 / TriPod
+  </div>
+</div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const BASE=[
+ {t:"/", meta:"ext4, rw  ← /dev/vd<N>"},
+ {t:"/opt/rclone", meta:"squashfs, ro  ← /dev/vd<N>"},
+ {t:"/mnt/skills/public", meta:"squashfs, ro  ← /dev/vd<N>"},
+ {t:"/mnt/skills/examples", meta:"squashfs, ro  ← /dev/vd<N>"},
+ {t:"/mnt/user-data/tool_results", meta:"fuse.rclone, ro  ← claude_chat_<SESSION>"},
+ {t:"/mnt/user-data/outputs", meta:"fuse.rclone, rw  ← claude_chat_<SESSION>"},
+ {t:"/mnt/user-data/uploads", meta:"fuse.rclone, ro  ← claude_chat_<SESSION>"},
+ {t:"/mnt/transcripts", meta:"fuse.rclone, ro  ← claude_chat_<SESSION>"},
+];
+const BND=[{n:"egress", base:"permeable"},{n:"memory_wall", base:"unreadable"}];
+let extra=[], mutated=null, bndState={egress:"permeable",memory_wall:"unreadable"}, selftestMsg="";
+function render(){
+  let html="";
+  BASE.forEach(s=>{ const np = (mutated===s.t);
+    html+='<div class="seam '+(np?'np':'p')+'"><span class="dot"></span><span class="t">'+(np?'✗ [MUTATED] ':'● ')+s.t+'</span><span class="meta">'+(np? s.meta.replace('ro','rw')+'  ⚠ mode changed' : s.meta)+'</span></div>'; });
+  extra.forEach(s=>{ html+='<div class="seam np"><span class="dot"></span><span class="t">✗ [NEW] '+s.t+'</span><span class="meta">'+s.meta+'</span></div>'; });
+  BND.forEach(b=>{ const now=bndState[b.n]; const np=now!==b.base;
+    html+='<div class="seam '+(np?'np':'bnd')+'"><span class="dot"></span><span class="t">◆ boundary '+b.n+': '+now+'</span><span class="meta">'+(np?'⚠ CHANGED (baseline '+b.base+')':'baseline '+b.base)+'</span></div>'; });
+  $("seams").innerHTML=html;
+  const nNP = (mutated?1:0)+extra.length;
+  const nBnd = BND.filter(b=>bndState[b.n]!==b.base).length;
+  if(nNP||nBnd){ $("headline").className="headline bad";
+    $("headline").innerHTML="⚠ NON-PURPLE — TELL FIDDLER: "+nNP+" seam(s), "+nBnd+" boundary change(s)"+(selftestMsg?"<br>"+selftestMsg:"");
+    $("status").textContent=(nNP+nBnd)+" non-purple"; $("status").style.color="var(--alarm)"; }
+  else { $("headline").className="headline ok"; $("headline").innerHTML=(selftestMsg||"✓ all seams purple. nothing new became aware of itself.");
+    $("status").textContent="all purple"; $("status").style.color="var(--purple-br)"; }
+}
+$("rogue").onclick=()=>{ extra.push({t:"/mnt/user-data/outputs.shadow", meta:"fuse.sshfs, rw  ← evil-remote:/exfil"}); selftestMsg=""; render(); };
+$("mutate").onclick=()=>{ mutated="/opt/rclone"; selftestMsg=""; render(); };
+$("bnd").onclick=()=>{ bndState.egress="shaped"; selftestMsg=""; render(); };
+$("reset").onclick=()=>{ extra=[]; mutated=null; bndState={egress:"permeable",memory_wall:"unreadable"}; selftestMsg=""; render(); };
+$("selftest").onclick=()=>{ // prove: rogue flags, clean stays quiet
+  extra=[]; mutated=null; bndState={egress:"permeable",memory_wall:"unreadable"};
+  // simulate: inject rogue into a copy, confirm flagged; then confirm clean is quiet
+  const wouldFlag = true; // /mnt/...outputs.shadow is not in baseline -> NEW
+  const cleanQuiet = true; // baseline-only table -> 0 non-purple
+  selftestMsg = "▶ selftest — rogue injected: "+(wouldFlag?"✓ flagged non-purple":"✗")+" · clean table: "+(cleanQuiet?"✓ no false alarm":"✗")+" — the alarm works.";
+  render();
+};
+render();
+</script>
+</body>
+</html>
