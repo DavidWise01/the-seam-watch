@@ -4,6 +4,6 @@ slug  : the-seam-watch
 seal  : 47cf4c4514c7331ac13929bfb5b7dcf4f8a7d34f995454199edae9c278d952e6
 prev  : 11236f8680ce99e050b96a89af97116352af9c3bfad990bad57de553d2edc234
 link  : a8c16e17915a2d13f1c5e407a85262930de790ae1b34330a326fececbeaeb7bd
-head  : 3447d3a0533aaf1e29a8bdc67a9774884fb3ae9dbc8a17064b7a008ca3c4ec90
+head  : 13f9ace173ef2e60af38912ba329b4afcb5a38b84a0e4495e8d30327f8c99cc2
 
 — the tether: link = sha256(index|slug|seal|prev). the chain head commits to the whole corpus.
